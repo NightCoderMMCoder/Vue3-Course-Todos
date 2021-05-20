@@ -1,22 +1,14 @@
 <template>
-  <router-link :to="{ name: 'Home' }">Home</router-link> |
-  <router-link :to="{ name: 'About' }">About</router-link>
+  <Navbar />
   <router-view></router-view>
 </template>
 
 <script>
+import Navbar from "./components/Layout/Navbar.vue";
 export default {
   name: "App",
+  components: {
+    Navbar,
+  },
 };
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
