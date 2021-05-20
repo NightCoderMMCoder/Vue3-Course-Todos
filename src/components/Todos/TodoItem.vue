@@ -5,6 +5,7 @@
       type="checkbox"
       value=""
       :checked="todo.completed"
+      @change="handleChange"
     />
     <label class="form-check-label">
       <p class="mb-0">
@@ -29,11 +30,18 @@ import db from "../../firebase/init";
 export default {
   props: { todo: Object },
   setup(props) {
+    const docRef = db.collection("todos").doc(props.todo.id);
     const handleDelete = async () => {
-      const docRef = db.collection("todos").doc(props.todo.id);
       await docRef.delete();
     };
-    return { handleDelete };
+
+    const handleChange = async () => {
+      await docRef.update({
+        completed: !props.todo.completed,
+      });
+    };
+
+    return { handleDelete, handleChange };
   },
 };
 </script>
