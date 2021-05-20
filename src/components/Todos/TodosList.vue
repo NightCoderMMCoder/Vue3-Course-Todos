@@ -22,7 +22,9 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import db from "../../firebase/init";
+
 export default {
   setup() {
     const todos = ref([
@@ -43,6 +45,19 @@ export default {
         task: "Homework",
       },
     ]);
+
+    onMounted(async () => {
+      const snapshot = await db.collection("todos").get();
+      let results = [];
+      snapshot.docs.forEach((doc) => {
+        results.push({
+          ...doc.data(),
+          id: doc.id,
+        });
+      });
+      todos.value = results;
+    });
+
     return { todos };
   },
 };
