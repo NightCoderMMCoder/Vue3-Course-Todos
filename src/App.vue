@@ -1,6 +1,8 @@
 <template>
   <Navbar />
-  <router-view></router-view>
+  <main class="my-5">
+    <router-view></router-view>
+  </main>
 </template>
 
 <script>
@@ -12,3 +14,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+main {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+</style>
