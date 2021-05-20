@@ -13,7 +13,7 @@
           <label for="date" class="form-label">Date</label>
           <input type="date" id="date" class="form-control" v-model="dueDate" />
         </div>
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" :disabled="isLoading">
           Add <Spinner v-if="isLoading" />
         </button>
       </form>

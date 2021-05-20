@@ -1,5 +1,11 @@
 <template>
   <Spinner v-if="isLoading" color="#42b983" size="50px" />
+  <div class="error" v-else-if="error">
+    {{ error }}
+    <button class="btn btn-primary" @click="$router.replace({ name: 'Home' })">
+      Go Home
+    </button>
+  </div>
   <div class="card" v-else>
     <div class="card-header bg-primary">
       Edit Todo
@@ -14,7 +20,7 @@
           <label for="date" class="form-label">Date</label>
           <input type="date" id="date" class="form-control" v-model="dueDate" />
         </div>
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" :disabled="isLoading">
           Update <Spinner v-if="isLoading" />
         </button>
       </form>
@@ -45,11 +51,21 @@ export default {
     });
 
     const docRef = db.collection("todos").doc(id);
+    const error = ref(null);
     onMounted(async () => {
-      const doc = await docRef.get();
-      todos.task = doc.data().task;
-      todos.dueDate = doc.data().dueDate;
-      isLoading.value = false;
+      try {
+        const doc = await docRef.get();
+        if (!doc.exists) {
+          throw new Error("Data not found");
+        }
+        todos.task = doc.data().task;
+        todos.dueDate = doc.data().dueDate;
+      } catch (err) {
+        error.value = err.message;
+        console.log(err.message);
+      } finally {
+        isLoading.value = false;
+      }
     });
 
     const handleSubmit = async () => {
@@ -59,7 +75,7 @@ export default {
       isLoading.value = false;
     };
 
-    return { ...toRefs(todos), handleSubmit, isLoading };
+    return { ...toRefs(todos), handleSubmit, isLoading, error };
   },
 };
 </script>
