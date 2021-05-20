@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap");
 :root {
-  --primary: rgb(66, 185, 131);
+  --primary: #42b983;
 }
 body {
   font-family: "Quicksand", sans-serif !important;

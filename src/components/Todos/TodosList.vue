@@ -1,6 +1,12 @@
 <template>
   <div>
-    <todo-item v-for="todo in todos" :key="todo.id" :todo="todo"></todo-item>
+    <Spinner v-if="isLoading" color="#42b983" size="50px" />
+    <todo-item
+      v-else
+      v-for="todo in todos"
+      :key="todo.id"
+      :todo="todo"
+    ></todo-item>
   </div>
 </template>
 
@@ -8,13 +14,16 @@
 import { ref } from "vue";
 import db from "../../firebase/init";
 import TodoItem from "./TodoItem.vue";
+import Spinner from "../Shared/Spinner.vue";
 
 export default {
   components: {
     TodoItem,
+    Spinner,
   },
   setup() {
     const todos = ref([]);
+    const isLoading = ref(true);
 
     const collectionRef = db.collection("todos").orderBy("createdAt");
     // const snapshot = await collectionRef.get();
@@ -42,6 +51,7 @@ export default {
             ...change.doc.data(),
             id: change.doc.id,
           });
+          isLoading.value = false;
         }
         if (change.type === "modified") {
           const idx = todos.value.findIndex(
@@ -61,7 +71,7 @@ export default {
       });
     });
 
-    return { todos };
+    return { todos, isLoading };
   },
 };
 </script>
