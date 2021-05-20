@@ -23,17 +23,19 @@
 import { onMounted, reactive, toRefs } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import db from "../../firebase/init";
+import useDoc from "@/hooks/useDoc";
 
 export default {
   setup() {
     const route = useRoute();
     const router = useRouter();
+    const id = route.params.id;
+    const { updateDoc } = useDoc("todos", id);
 
     const todos = reactive({
       task: "",
       dueDate: "",
     });
-    const id = route.params.id;
 
     const docRef = db.collection("todos").doc(id);
     onMounted(async () => {
@@ -43,7 +45,7 @@ export default {
     });
 
     const handleSubmit = async () => {
-      await docRef.update(todos);
+      await updateDoc(todos);
       router.push({ name: "Home" });
     };
 

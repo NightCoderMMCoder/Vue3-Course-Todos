@@ -19,7 +19,11 @@
           @click="$router.push({ name: 'EditTodo', params: { id: todo.id } })"
         ></i>
         <i class="fas fa-trash" @click="handleDelete"></i>
-        <i class="far fa-star" :class="{ important: todo.important }"></i>
+        <i
+          class="far fa-star"
+          :class="{ important: todo.important }"
+          @click="handleClick"
+        ></i>
       </span>
     </label>
   </div>
@@ -27,21 +31,30 @@
 
 <script>
 import db from "../../firebase/init";
+import useDoc from "@/hooks/useDoc";
+
 export default {
   props: { todo: Object },
   setup(props) {
+    const { updateDoc } = useDoc("todos", props.todo.id);
     const docRef = db.collection("todos").doc(props.todo.id);
     const handleDelete = async () => {
       await docRef.delete();
     };
 
-    const handleChange = async () => {
-      await docRef.update({
+    const handleChange = () => {
+      updateDoc({
         completed: !props.todo.completed,
       });
     };
 
-    return { handleDelete, handleChange };
+    const handleClick = async () => {
+      updateDoc({
+        important: !props.todo.important,
+      });
+    };
+
+    return { handleDelete, handleChange, handleClick };
   },
 };
 </script>

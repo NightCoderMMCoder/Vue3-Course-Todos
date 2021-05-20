@@ -22,8 +22,10 @@
 <script>
 import { reactive, toRefs } from "vue";
 import db from "../../firebase/init";
+import { useRouter } from "vue-router";
 export default {
   setup() {
+    const router = useRouter();
     const todos = reactive({
       task: "",
       dueDate: "",
@@ -31,11 +33,11 @@ export default {
 
     const handleSubmit = async () => {
       const collectionRef = db.collection("todos");
-      const doc = await collectionRef.add({
+      await collectionRef.add({
         ...todos,
         createdAt: Date.now(),
       });
-      console.log(doc);
+      router.push({ name: "Home" });
     };
 
     return { ...toRefs(todos), handleSubmit };
