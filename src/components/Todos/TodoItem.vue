@@ -13,7 +13,10 @@
         <small v-if="todo.dueDate">Overdue {{ todo.dueDate }} </small>
       </p>
       <span>
-        <i class="fas fa-pencil-alt"></i>
+        <i
+          class="fas fa-pencil-alt"
+          @click="$router.push({ name: 'EditTodo', params: { id: todo.id } })"
+        ></i>
         <i class="fas fa-trash" @click="handleDelete"></i>
         <i class="far fa-star" :class="{ important: todo.important }"></i>
       </span>

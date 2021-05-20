@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="card-header bg-primary">
-      Add Todo
+      Edit Todo
     </div>
     <div class="card-body">
       <form @submit.prevent="handleSubmit">
@@ -13,7 +13,7 @@
           <label for="date" class="form-label">Date</label>
           <input type="date" id="date" class="form-control" v-model="dueDate" />
         </div>
-        <button class="btn btn-primary">Add</button>
+        <button class="btn btn-primary">Update</button>
       </form>
     </div>
   </div>
