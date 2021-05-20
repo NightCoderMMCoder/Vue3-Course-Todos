@@ -1,5 +1,5 @@
 <template>
-  <div class="search">
+  <div class="search mb-4">
     <input type="text" placeholder="Search..." class="form-control" />
     <div class="dropdown">
       <button
