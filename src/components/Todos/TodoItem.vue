@@ -4,10 +4,9 @@
       class="form-check-input"
       type="checkbox"
       value=""
-      id="flexCheckDefault"
       :checked="todo.completed"
     />
-    <label class="form-check-label" for="flexCheckDefault">
+    <label class="form-check-label">
       <p class="mb-0">
         <span :class="{ completed: todo.completed }">{{ todo.task }}</span>
         <br />
@@ -15,7 +14,7 @@
       </p>
       <span>
         <i class="fas fa-pencil-alt"></i>
-        <i class="fas fa-trash"></i>
+        <i class="fas fa-trash" @click="handleDelete"></i>
         <i class="far fa-star" :class="{ important: todo.important }"></i>
       </span>
     </label>
@@ -23,8 +22,16 @@
 </template>
 
 <script>
+import db from "../../firebase/init";
 export default {
   props: { todo: Object },
+  setup(props) {
+    const handleDelete = async () => {
+      const docRef = db.collection("todos").doc(props.todo.id);
+      await docRef.delete();
+    };
+    return { handleDelete };
+  },
 };
 </script>
 
