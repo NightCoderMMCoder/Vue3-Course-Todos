@@ -12,7 +12,7 @@
 import SearchBox from "../components/Todos/SearchBox.vue";
 import TodosList from "../components/Todos/TodosList.vue";
 import useCollection from "@/hooks/useCollection";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 
 export default {
   components: { SearchBox, TodosList },
@@ -26,7 +26,16 @@ export default {
       sortingType.value = type;
     };
 
-    const searchTerm = ref("Something");
+    const searchTerm = ref("");
+    const activeSearchTerm = ref("");
+
+    watch(searchTerm, (val) => {
+      setTimeout(() => {
+        if (val === searchTerm.value) {
+          activeSearchTerm.value = val;
+        }
+      }, 300);
+    });
 
     const filteredTodos = computed(() => {
       if (sortingType.value === "alphabetically") {
@@ -46,6 +55,10 @@ export default {
             let dueDateB = new Date(b.dueDate);
             return dueDateB - dueDateA;
           });
+      } else if (activeSearchTerm.value.trim()) {
+        return todos.value.filter((todo) =>
+          todo.task.toLowerCase().includes(activeSearchTerm.value.toLowerCase())
+        );
       } else {
         return todos.value;
       }
