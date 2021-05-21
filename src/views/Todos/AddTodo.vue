@@ -23,27 +23,22 @@
 
 <script>
 import { reactive, ref, toRefs } from "vue";
-import db from "../../firebase/init";
 import { useRouter } from "vue-router";
 import Spinner from "../../components/Shared/Spinner.vue";
+import useCollection from "../../hooks/useCollection";
+
 export default {
   components: { Spinner },
   setup() {
+    const { addDoc, isLoading } = useCollection("todos");
     const router = useRouter();
     const todo = reactive({
       task: "",
       dueDate: "",
     });
-    const isLoading = ref(false);
 
     const handleSubmit = async () => {
-      isLoading.value = true;
-      const collectionRef = db.collection("todos");
-      await collectionRef.add({
-        ...todo,
-        createdAt: Date.now(),
-      });
-      isLoading.value = false;
+      addDoc(todo);
       router.push({ name: "Home" });
     };
 
