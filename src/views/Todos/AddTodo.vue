@@ -30,7 +30,7 @@ export default {
   components: { Spinner },
   setup() {
     const router = useRouter();
-    const todos = reactive({
+    const todo = reactive({
       task: "",
       dueDate: "",
     });
@@ -40,14 +40,14 @@ export default {
       isLoading.value = true;
       const collectionRef = db.collection("todos");
       await collectionRef.add({
-        ...todos,
+        ...todo,
         createdAt: Date.now(),
       });
       isLoading.value = false;
       router.push({ name: "Home" });
     };
 
-    return { ...toRefs(todos), handleSubmit, isLoading };
+    return { ...toRefs(todo), handleSubmit, isLoading };
   },
 };
 </script>

@@ -30,16 +30,14 @@
 </template>
 
 <script>
-import db from "../../firebase/init";
 import useDoc from "@/hooks/useDoc";
 
 export default {
   props: { todo: Object },
   setup(props) {
-    const { updateDoc } = useDoc("todos", props.todo.id);
-    const docRef = db.collection("todos").doc(props.todo.id);
+    const { updateDoc, deleteDoc } = useDoc("todos", props.todo.id);
     const handleDelete = async () => {
-      await docRef.delete();
+      deleteDoc();
     };
 
     const handleChange = () => {

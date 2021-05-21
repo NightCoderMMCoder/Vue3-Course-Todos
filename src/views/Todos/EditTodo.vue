@@ -31,7 +31,6 @@
 <script>
 import { onMounted, reactive, ref, toRefs } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import db from "../../firebase/init";
 import useDoc from "@/hooks/useDoc";
 import Spinner from "../../components/Shared/Spinner.vue";
 
@@ -41,41 +40,28 @@ export default {
     const route = useRoute();
     const router = useRouter();
     const id = route.params.id;
-    const { updateDoc } = useDoc("todos", id);
+    const { updateDoc, getDoc, isLoading } = useDoc("todos", id);
 
-    const isLoading = ref(true);
-
-    const todos = reactive({
+    const todo = reactive({
       task: "",
       dueDate: "",
     });
 
-    const docRef = db.collection("todos").doc(id);
     const error = ref(null);
     onMounted(async () => {
-      try {
-        const doc = await docRef.get();
-        if (!doc.exists) {
-          throw new Error("Data not found");
-        }
-        todos.task = doc.data().task;
-        todos.dueDate = doc.data().dueDate;
-      } catch (err) {
-        error.value = err.message;
-        console.log(err.message);
-      } finally {
-        isLoading.value = false;
+      const doc = await getDoc();
+      if (doc) {
+        todo.task = doc.data().task;
+        todo.dueDate = doc.data().dueDate;
       }
     });
 
     const handleSubmit = async () => {
-      isLoading.value = true;
-      await updateDoc(todos);
+      await updateDoc(todo);
       router.push({ name: "Home" });
-      isLoading.value = false;
     };
 
-    return { ...toRefs(todos), handleSubmit, isLoading, error };
+    return { ...toRefs(todo), handleSubmit, isLoading, error };
   },
 };
 </script>
