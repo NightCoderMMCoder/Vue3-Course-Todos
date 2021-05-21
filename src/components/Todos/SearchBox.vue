@@ -1,6 +1,12 @@
 <template>
   <div class="search mb-4">
-    <input type="text" placeholder="Search..." class="form-control" />
+    <input
+      type="text"
+      placeholder="Search..."
+      class="form-control"
+      :value="modelValue"
+      @input="(e) => $emit('update:modelValue', e.target.value)"
+    />
     <div class="dropdown">
       <button
         class="btn btn-primary dropdown-toggle"
@@ -12,6 +18,11 @@
         <i class="fas fa-sort"></i> Sort
       </button>
       <ul class="dropdown-menu" aria-labelledby="sort">
+        <li @click="setSortingType('all')">
+          <a class="dropdown-item" href="#">
+            <i class="fas fa-sort-alpha-down"></i> All
+          </a>
+        </li>
         <li @click="setSortingType('alphabetically')">
           <a class="dropdown-item" href="#">
             <i class="fas fa-sort-alpha-down"></i> Alphabetically
@@ -34,7 +45,8 @@
 
 <script>
 export default {
-  props: { setSortingType: Function },
+  emits: ["update:modelValue"],
+  props: { setSortingType: Function, modelValue: String },
 };
 </script>
 

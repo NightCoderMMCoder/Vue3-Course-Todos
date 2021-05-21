@@ -1,6 +1,9 @@
 <template>
   <div class="home">
-    <search-box :set-sorting-type="setSortingType"></search-box>
+    <search-box
+      :set-sorting-type="setSortingType"
+      v-model="searchTerm"
+    ></search-box>
     <TodosList :todos="filteredTodos" :isLoading="isLoading"></TodosList>
   </div>
 </template>
@@ -23,6 +26,8 @@ export default {
       sortingType.value = type;
     };
 
+    const searchTerm = ref("Something");
+
     const filteredTodos = computed(() => {
       if (sortingType.value === "alphabetically") {
         return todos.value.slice(0).sort((a, b) => {
@@ -41,11 +46,12 @@ export default {
             let dueDateB = new Date(b.dueDate);
             return dueDateB - dueDateA;
           });
+      } else {
+        return todos.value;
       }
-      return todos.value;
     });
 
-    return { filteredTodos, isLoading, setSortingType };
+    return { filteredTodos, isLoading, setSortingType, searchTerm };
   },
 };
 </script>
