@@ -12,17 +12,17 @@
         <i class="fas fa-sort"></i> Sort
       </button>
       <ul class="dropdown-menu" aria-labelledby="sort">
-        <li>
+        <li @click="setSortingType('alphabetically')">
           <a class="dropdown-item" href="#">
             <i class="fas fa-sort-alpha-down"></i> Alphabetically
           </a>
         </li>
-        <li>
+        <li @click="setSortingType('importance')">
           <a class="dropdown-item" href="#">
             <i class="far fa-star"></i> Importance
           </a>
         </li>
-        <li>
+        <li @click="setSortingType('dueDate')">
           <a class="dropdown-item" href="#"
             ><i class="fas fa-calendar"></i>Due Date
           </a>
@@ -33,7 +33,9 @@
 </template>
 
 <script>
-export default {};
+export default {
+  props: { setSortingType: Function },
+};
 </script>
 
 <style scoped>

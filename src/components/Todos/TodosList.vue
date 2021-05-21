@@ -13,19 +13,13 @@
 <script>
 import TodoItem from "./TodoItem.vue";
 import Spinner from "../Shared/Spinner.vue";
-import useCollection from "../../hooks/useCollection";
 
 export default {
+  props: { todos: Array, isLoading: Boolean },
   components: {
     TodoItem,
     Spinner,
   },
-  setup() {
-    const { getDocs, isLoading, items: todos } = useCollection("todos");
-
-    getDocs();
-
-    return { todos, isLoading };
-  },
+  setup() {},
 };
 </script>
