@@ -4,16 +4,22 @@ import db from "@/firebase/init";
 const useCollection = (collection) => {
   const isLoading = ref(false);
   const items = ref([]);
+  const error = ref(null);
 
   const collectionRef = db.collection(collection);
 
   const addDoc = async (data) => {
     isLoading.value = true;
-    await collectionRef.add({
-      ...data,
-      createdAt: Date.now(),
-    });
-    isLoading.value = false;
+    try {
+      await collectionRef.add({
+        ...data,
+        createdAt: Date.now(),
+      });
+    } catch (err) {
+      error.value = err.message;
+    } finally {
+      isLoading.value = false;
+    }
   };
 
   const getDocs = () => {
@@ -46,7 +52,7 @@ const useCollection = (collection) => {
     });
   };
 
-  return { addDoc, getDocs, isLoading, items };
+  return { addDoc, getDocs, isLoading, items, error };
 };
 
 export default useCollection;

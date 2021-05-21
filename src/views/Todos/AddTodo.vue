@@ -4,6 +4,9 @@
       Add Todo
     </div>
     <div class="card-body">
+      <div class="error-message" v-if="error">
+        {{ error }}
+      </div>
       <form @submit.prevent="handleSubmit">
         <div class="mb-2">
           <label for="task" class="form-label">Task</label>
@@ -34,7 +37,7 @@ import useValidation from "@/hooks/validation";
 export default {
   components: { Spinner },
   setup() {
-    const { addDoc, isLoading } = useCollection("todos");
+    const { addDoc, isLoading, error } = useCollection("todos");
     const router = useRouter();
     const todo = reactive({
       task: "",
@@ -45,12 +48,14 @@ export default {
     const handleSubmit = async () => {
       let isValidate = validation({ dueDate: false });
       if (isValidate) {
-        addDoc(todo);
-        router.push({ name: "Home" });
+        await addDoc(todo);
+        if (!error.value) {
+          router.push({ name: "Home" });
+        }
       }
     };
 
-    return { ...toRefs(todo), handleSubmit, isLoading, errors };
+    return { ...toRefs(todo), handleSubmit, isLoading, errors, error };
   },
 };
 </script>
