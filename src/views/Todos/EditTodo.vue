@@ -46,6 +46,7 @@ export default {
       task: "",
       dueDate: "",
     });
+    const { validation, errors } = useValidation(todo);
 
     const error = ref(null);
     onMounted(async () => {
@@ -57,11 +58,14 @@ export default {
     });
 
     const handleSubmit = async () => {
-      await updateDoc(todo);
-      router.push({ name: "Home" });
+      let isValidate = validation({ dueDate: false });
+      if (isValidate) {
+        await updateDoc(todo);
+        router.push({ name: "Home" });
+      }
     };
 
-    return { ...toRefs(todo), handleSubmit, isLoading, error };
+    return { ...toRefs(todo), handleSubmit, isLoading, error, errors };
   },
 };
 </script>

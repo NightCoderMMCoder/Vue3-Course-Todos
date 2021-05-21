@@ -8,6 +8,9 @@
         <div class="mb-2">
           <label for="task" class="form-label">Task</label>
           <input type="text" id="task" class="form-control" v-model="task" />
+          <small class="error-message" v-if="errors.task">{{
+            errors.task
+          }}</small>
         </div>
         <div class="mb-3">
           <label for="date" class="form-label">Date</label>
@@ -22,10 +25,11 @@
 </template>
 
 <script>
-import { reactive, ref, toRefs } from "vue";
+import { reactive, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import Spinner from "../../components/Shared/Spinner.vue";
 import useCollection from "../../hooks/useCollection";
+import useValidation from "@/hooks/validation";
 
 export default {
   components: { Spinner },
@@ -36,13 +40,17 @@ export default {
       task: "",
       dueDate: "",
     });
+    const { validation, errors } = useValidation(todo);
 
     const handleSubmit = async () => {
-      addDoc(todo);
-      router.push({ name: "Home" });
+      let isValidate = validation({ dueDate: false });
+      if (isValidate) {
+        addDoc(todo);
+        router.push({ name: "Home" });
+      }
     };
 
-    return { ...toRefs(todo), handleSubmit, isLoading };
+    return { ...toRefs(todo), handleSubmit, isLoading, errors };
   },
 };
 </script>
