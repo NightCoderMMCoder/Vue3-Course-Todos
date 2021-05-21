@@ -11,7 +11,9 @@
       <p class="mb-0">
         <span :class="{ completed: todo.completed }">{{ todo.task }}</span>
         <br />
-        <small v-if="todo.dueDate">Overdue {{ todo.dueDate }} </small>
+        <small v-if="todo.dueDate" :class="{ overDue: isOverDue }"
+          >{{ isOverDue ? "OverDue" : "Due" }} {{ formattedDueDate }}
+        </small>
       </p>
       <span>
         <i
@@ -31,6 +33,8 @@
 
 <script>
 import useDoc from "@/hooks/useDoc";
+import { computed } from "vue";
+import moment from "moment";
 
 export default {
   props: { todo: Object },
@@ -52,7 +56,23 @@ export default {
       });
     };
 
-    return { handleDelete, handleChange, handleClick };
+    const formattedDueDate = computed(() =>
+      moment(props.todo.dueDate).format("ddd MMM DD")
+    );
+
+    const isOverDue = computed(() => {
+      let currentDate = moment(new Date());
+      let dueDate = moment(props.todo.dueDate);
+      return currentDate.diff(dueDate, "days") > 0 ? true : false;
+    });
+
+    return {
+      handleDelete,
+      handleChange,
+      handleClick,
+      formattedDueDate,
+      isOverDue,
+    };
   },
 };
 </script>
